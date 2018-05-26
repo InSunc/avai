@@ -407,26 +407,50 @@ void vExecNextState()
 			}
 			else
 			{
-				if(debounce(iRampSensors, DEBOUNCE_TIME, 0) || (millis() - startTimer >= RAMP_TIMEOUT))
+				switch(step)
 				{
-					Serial.println("STOPPED - RAMP_LEFT");
-					digitalWrite(motor[1].iPinLeft, LOW);
-					pinMode(motor[1].iPinLeft, INPUT);
-					actualState = nextState;
-					activated = false;
-					digitalWrite(iRampRelay, LOW);
+					case 0:
+						if(millis() - startTimer >= 55000)
+						{
+							digitalWrite(iRampRelay, LOW);
+							Serial.println("RELAY LOW");
+							step++;
+						}
+						break;
 
-					if(millis() - startTimer >= RAMP_TIMEOUT)
-					{
-						Serial.println("RAMP_CLOSED TIMEOUT");
-						action = PAUSE;
-					}
+					case 1:
+						if(millis() - startTimer >= 75000)
+						{
+							digitalWrite(iRampRelay, HIGH);
+							Serial.println("RELAY HIGH");
+							step++;
+						}
+						break;
 
-					if(debounce(iChair, DEBOUNCE_TIME, 1))
-					{
-						action = PAUSE;
-						prevAction = CLOSE;
-					}
+					case 2:
+						if(debounce(iRampSensors, DEBOUNCE_TIME, 0) || (millis() - startTimer >= RAMP_TIMEOUT))
+						{
+							Serial.println("STOPPED - RAMP_LEFT");
+							digitalWrite(motor[1].iPinLeft, LOW);
+							pinMode(motor[1].iPinLeft, INPUT);
+							actualState = nextState;
+							activated = false;
+							step = 0;
+							//digitalWrite(iRampRelay, HIGH);
+
+							if(millis() - startTimer >= RAMP_TIMEOUT)
+							{
+								Serial.println("RAMP_CLOSED TIMEOUT");
+								action = PAUSE;
+							}
+
+							if(debounce(iChair, DEBOUNCE_TIME, 1))
+							{
+								action = PAUSE;
+								prevAction = CLOSE;
+							}
+						}
+						break;
 				}
 			}
 			break;
@@ -443,32 +467,45 @@ void vExecNextState()
 			}
 			else
 			{
+				// LOW - lucreaza 1
+				// HIGH - lucreaza ambele
 				Serial.println(millis() - startTimer);
-				if(millis() - startTimer >= 27500)
+				switch(step)
 				{
-					digitalWrite(iRampRelay, HIGH);
-					Serial.println("RAMP RELAY TRANSMIS");
-				}
-				else
-				{
-					digitalWrite(iRampRelay, LOW);
-					Serial.println("RELAY LOW");
-				}
-					
+					case 0:
+						if(millis() - startTimer >= 3000)
+						{
+							digitalWrite(iRampRelay, LOW);
+							Serial.println("RELAY LOW");
+							step++;
+						}
+						break;
 
+					case 1:
+						if(millis() - startTimer >= 29000)
+						{
+							digitalWrite(iRampRelay, HIGH);
+							Serial.println("RELAY HIGH");
+							step++;
+						}
+						break;
 
-				if(millis() - startTimer >= RAMP_TIMEOUT)
-				{
-					Serial.println("STOPPED - RAMP_RIGHT" + (millis() - startTimer));
-					digitalWrite(motor[1].iPinRight, LOW);
-					pinMode(motor[1].iPinRight, INPUT);
-					digitalWrite(iRampRelay, LOW);
-					actualState = nextState;
-					activated = false;
-					action = PAUSE;
-					prevAction = OPEN;
+					case 2:
+						if(millis() - startTimer >= RAMP_TIMEOUT)
+						{
+							Serial.println("STOPPED - RAMP_RIGHT" + (millis() - startTimer));
+							digitalWrite(motor[1].iPinRight, LOW);
+							pinMode(motor[1].iPinRight, INPUT);
+							digitalWrite(iRampRelay, LOW);
+							actualState = nextState;
+							activated = false;
+							action = PAUSE;
+							prevAction = OPEN;
+							step = 0;
+						}
+						actualState = nextState;
+						break;
 				}
-				actualState = nextState;
 			}
 			break;
 	}

@@ -6,7 +6,7 @@
 #define BUTTON_DEBOUNCE 90000
 
 #define PLATFORM_TIMEOUT 10000
-#define RAMP_TIMEOUT 100000
+#define RAMP_TIMEOUT 90000
 
 
 Motor motor[2];
@@ -35,6 +35,7 @@ u32 readTimer = 0;
 
 bool activated = false;
 bool beep = false;
+unsigned char step = 0;
 
 NewPing sonar(iProximityTrig, iProximityEcho, 35);
 
@@ -67,7 +68,7 @@ void setup()
 	pinMode(iButtonPin,      INPUT_PULLUP);
 
 	pinMode(iRampRelay,      OUTPUT);
-	digitalWrite(iRampRelay, LOW);
+	digitalWrite(iRampRelay, HIGH);
 
 	pinMode(iPlatformEnable, OUTPUT);
 	digitalWrite(iPlatformEnable, HIGH);
@@ -104,6 +105,7 @@ void loop()
 		if(debounce(iRampButton, DEBOUNCE_TIME, 1))
 		{
 			Serial.println("------------RAMP_BTN APASAT");
+			step = 0;
 			actualState = getActualState();
 			if((actualState == RAMP_OPEN) || (actualState == RAMP_CLOSED))
 				vButtonClick();
