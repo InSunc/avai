@@ -104,7 +104,7 @@ void loop()
 
 		if(debounce(iRampButton, DEBOUNCE_TIME, 1))
 		{
-			Serial.println("------------RAMP_BTN APASAT");
+			Serial.println("RAMP_BTN CLICK");
 			step = 0;
 			actualState = getActualState();
 			if((actualState == RAMP_OPEN) || (actualState == RAMP_CLOSED))
@@ -125,7 +125,7 @@ void loop()
 	{
 		if(debounce(iButtonPin, BUTTON_DEBOUNCE, 0))
 		{
-			Serial.println("------------REMOTE APASAT");
+			Serial.println("REMOTE CLICK");
 			actualState = getActualState();
 			vButtonClick();
 		}

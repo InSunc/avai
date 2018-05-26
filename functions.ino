@@ -61,20 +61,7 @@ state getStateOf(element e)
 		vError("[ ERROR ] PLATFORM");
 
 	if(((platformClosedSensor == true) && (rampSensors == false)) || (((platformOpenSensor == platformClosedSensor) && platformOpenSensor == false) && rampSensors == false))
-	{
-		if(((platformClosedSensor == true) && (rampSensors == false)))
-			Serial.println("111111111111111111111111111111");
-			
-		if(((platformOpenSensor == platformClosedSensor) && platformOpenSensor == false) && rampSensors == false) {
-			Serial.println("2222222222222222222222222");
-			Serial.println(platformClosedSensor);
-			Serial.println(platformOpenSensor);
-			Serial.println(rampSensors);
-			}
-		
-
 		vError("[ ERROR ] RAMP");
-	}
 
 
 	state resultState;
